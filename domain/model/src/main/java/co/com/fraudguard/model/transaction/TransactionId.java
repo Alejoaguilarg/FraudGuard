@@ -1,0 +1,16 @@
+package co.com.fraudguard.model.transaction;
+
+import java.util.UUID;
+
+public record TransactionId(UUID value) {
+
+    public TransactionId {
+        if (value == null) {
+            throw new IllegalArgumentException("TransactionId value must not be null");
+        }
+    }
+
+    public static TransactionId generate() {
+        return new TransactionId(UUID.randomUUID());
+    }
+}
