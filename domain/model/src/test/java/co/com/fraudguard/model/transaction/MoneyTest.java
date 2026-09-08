@@ -86,7 +86,8 @@ class MoneyTest {
     @Test
     @DisplayName("Normalizes scale to currency fraction digits")
     void mustNormalizeScale(){
-        assertEquals(new BigDecimal("100.50"), Money.of("100.50", "USD").amount());
+        assertEquals(new BigDecimal("100.00"), Money.of("100", "USD").amount());
+        assertEquals(new BigDecimal("100"), Money.of("100", "JPY").amount());
     }
 
     @Test
@@ -98,6 +99,4 @@ class MoneyTest {
         Money usd1 = Money.of("100.135", "USD");
         assertEquals(new BigDecimal("100.14"), usd1.amount());
     }
-
-
 }

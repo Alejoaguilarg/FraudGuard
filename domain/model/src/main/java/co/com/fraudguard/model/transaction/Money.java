@@ -18,7 +18,7 @@ public record Money(BigDecimal amount, Currency currency) {
             throw new IllegalArgumentException("Currency must be provided");
         }
 
-        amount = amount.setScale(2, RoundingMode.HALF_EVEN);
+        amount = amount.setScale(currency.getDefaultFractionDigits(), RoundingMode.HALF_EVEN);
     }
 
     public static Money of(String amount, String currency) {
