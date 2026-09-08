@@ -33,14 +33,15 @@ public class RiskScoreTest {
     @DisplayName("Rejects inconsistent level")
     void mustRejectInconsistentLevel(){
         assertThrows(IllegalArgumentException.class, () -> new RiskScore(0.95, RiskLevel.LOW));
+        assertThrows(IllegalArgumentException.class, () -> new RiskScore(0.9, RiskLevel.CRITICAL));
     }
 
     @Test
     @DisplayName("Accepts consistent level")
-     void mustAcceptsConsistentLevel(){
+    void mustAcceptsConsistentLevel(){
         RiskScore score = new RiskScore(0.95, RiskLevel.CRITICAL);
         assertEquals(RiskLevel.CRITICAL, score.level());
-     }
+    }
 
     @Test
     void mustDeriveCorrectLevel(){

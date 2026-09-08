@@ -82,4 +82,22 @@ class MoneyTest {
             assertNotSame(original, result);
         }
     }
+
+    @Test
+    @DisplayName("Normalizes scale to currency fraction digits")
+    void mustNormalizeScale(){
+        assertEquals(new BigDecimal("100.50"), Money.of("100.50", "USD").amount());
+    }
+
+    @Test
+    @DisplayName("Rounds excess decimals with HALF_EVEN")
+    void roundExcessDecimals(){
+        Money usd = Money.of("100.125", "USD");
+        assertEquals(new BigDecimal("100.12"), usd.amount());
+
+        Money usd1 = Money.of("100.135", "USD");
+        assertEquals(new BigDecimal("100.14"), usd1.amount());
+    }
+
+
 }

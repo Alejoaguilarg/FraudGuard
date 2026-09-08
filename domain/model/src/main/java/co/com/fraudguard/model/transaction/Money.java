@@ -1,6 +1,7 @@
 package co.com.fraudguard.model.transaction;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.Currency;
 
 public record Money(BigDecimal amount, Currency currency) {
@@ -16,6 +17,8 @@ public record Money(BigDecimal amount, Currency currency) {
         if (currency == null || currency.getCurrencyCode().isBlank()) {
             throw new IllegalArgumentException("Currency must be provided");
         }
+
+        amount = amount.setScale(2, RoundingMode.HALF_EVEN);
     }
 
     public static Money of(String amount, String currency) {
