@@ -99,4 +99,11 @@ class MoneyTest {
         Money usd1 = Money.of("100.135", "USD");
         assertEquals(new BigDecimal("100.14"), usd1.amount());
     }
+
+    @Test
+    @DisplayName("rejects currencies without default fractions digits")
+    void mustRejectCurrenciesWithoutDefaultFractionDigits(){
+        assertThrows(IllegalArgumentException.class, () -> Money.of("1", "XXX"));
+        assertThrows(IllegalArgumentException.class, () -> Money.of("100", "XUA"));
+    }
 }

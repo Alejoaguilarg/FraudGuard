@@ -18,7 +18,11 @@ public record Money(BigDecimal amount, Currency currency) {
             throw new IllegalArgumentException("Currency must be provided");
         }
 
-        amount = amount.setScale(currency.getDefaultFractionDigits(), RoundingMode.HALF_EVEN);
+        int digits = currency.getDefaultFractionDigits();
+        if (digits < 0) {
+            throw new IllegalArgumentException("Currency " + currency + " has no fraction digits - not supported");
+        }
+        amount = amount.setScale(digits, RoundingMode.HALF_EVEN);
     }
 
     public static Money of(String amount, String currency) {
