@@ -1,4 +1,4 @@
-package co.com.fraudguard.model.enums;
+package co.com.fraudguard.model.transaction;
 
 public enum RiskLevel {
     LOW, MEDIUM, HIGH, CRITICAL

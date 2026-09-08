@@ -18,8 +18,14 @@ public record Money(BigDecimal amount, Currency currency) {
         }
     }
 
-    public static Money of(double amount, String currency) {
-        return new Money(BigDecimal.valueOf(amount), Currency.getInstance(currency));
+    public static Money of(String amount, String currency) {
+        if (currency == null ) {
+            throw new IllegalArgumentException("Currency code must not be null");
+        }
+        if (amount == null) {
+            throw new IllegalArgumentException("Amount must not be null");
+        }
+        return new Money(new BigDecimal(amount), Currency.getInstance(currency));
     }
 
     public Money add(Money other) {

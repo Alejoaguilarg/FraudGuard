@@ -1,8 +1,8 @@
 package co.com.fraudguard.model.transaction;
 
-import co.com.fraudguard.model.enums.RiskLevel;
 import org.junit.jupiter.api.Test;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -29,9 +29,16 @@ public class RiskScoreTest {
 
     @Test
     void mustDeriveCorrectLevel(){
-        assertTrue(new RiskScore(0.95).level() == RiskLevel.CRITICAL);
-        assertTrue(new RiskScore(0.9).level() == RiskLevel.HIGH);
-        assertTrue(new RiskScore(0.5).level() == RiskLevel.MEDIUM);
-        assertTrue(new RiskScore(0.4).level() == RiskLevel.LOW);
+        assertEquals(RiskLevel.CRITICAL, new RiskScore(0.95).level());
+        assertEquals(RiskLevel.HIGH, new RiskScore(0.9).level());
+        assertEquals(RiskLevel.MEDIUM, new RiskScore(0.5).level());
+        assertEquals(RiskLevel.LOW, new RiskScore(0.4).level());
+        assertEquals(RiskLevel.LOW, new RiskScore(0.05).level());
+    }
+
+    @Test
+    void canonicalConstructorDerivesLevel() {
+        RiskScore score = new RiskScore(0.05, RiskLevel.CRITICAL);
+        assertEquals(RiskLevel.LOW, score.level());
     }
 }
