@@ -25,7 +25,7 @@ class MoneyTest {
         @Test
         void mustAcceptZeroAmount() {
             final Money actual = Money.of("0", "USD");
-            assertEquals(BigDecimal.ZERO, actual.amount().stripTrailingZeros());
+            assertEquals(0, BigDecimal.ZERO.compareTo(actual.amount()));
         }
 
         @Test

@@ -1,5 +1,6 @@
 package co.com.fraudguard.model.transaction;
 
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -22,10 +23,24 @@ public class RiskScoreTest {
     }
 
     @Test
+    @DisplayName("0.9 exactly is NOT critical — threshold is strictly > 0.9")
     void mustNotBeCritical(){
         assertFalse(new RiskScore(0.85).isCritical());
         assertFalse(new RiskScore(0.9).isCritical());
     }
+
+    @Test
+    @DisplayName("Rejects inconsistent level")
+    void mustRejectInconsistentLevel(){
+        assertThrows(IllegalArgumentException.class, () -> new RiskScore(0.95, RiskLevel.LOW));
+    }
+
+    @Test
+    @DisplayName("Accepts consistent level")
+     void mustAcceptsConsistentLevel(){
+        RiskScore score = new RiskScore(0.95, RiskLevel.CRITICAL);
+        assertEquals(RiskLevel.CRITICAL, score.level());
+     }
 
     @Test
     void mustDeriveCorrectLevel(){
@@ -34,11 +49,5 @@ public class RiskScoreTest {
         assertEquals(RiskLevel.MEDIUM, new RiskScore(0.5).level());
         assertEquals(RiskLevel.LOW, new RiskScore(0.4).level());
         assertEquals(RiskLevel.LOW, new RiskScore(0.05).level());
-    }
-
-    @Test
-    void canonicalConstructorDerivesLevel() {
-        RiskScore score = new RiskScore(0.05, RiskLevel.CRITICAL);
-        assertEquals(RiskLevel.LOW, score.level());
     }
 }
