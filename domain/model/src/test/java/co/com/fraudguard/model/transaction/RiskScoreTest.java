@@ -38,7 +38,7 @@ public class RiskScoreTest {
 
     @Test
     @DisplayName("Accepts consistent level")
-    void mustAcceptsConsistentLevel(){
+    void mustAcceptConsistentLevel(){
         RiskScore score = new RiskScore(0.95, RiskLevel.CRITICAL);
         assertEquals(RiskLevel.CRITICAL, score.level());
     }
