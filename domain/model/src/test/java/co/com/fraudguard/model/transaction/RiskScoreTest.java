@@ -1,8 +1,11 @@
 package co.com.fraudguard.model.transaction;
 
+import co.com.fraudguard.model.shared.exception.InconsistentRiskLevelException;
+import co.com.fraudguard.model.shared.exception.InvalidRiskScoreException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -12,14 +15,15 @@ public class RiskScoreTest {
 
     @Test
     void mustBeBetween0And1() {
-        assertThrows(IllegalArgumentException.class, () -> new RiskScore(-1));
-        assertThrows(IllegalArgumentException.class, () -> new RiskScore(2));
+        assertThrows(InvalidRiskScoreException.class, () -> new RiskScore(-1));
+        assertThrows(InvalidRiskScoreException.class, () -> new RiskScore(2));
     }
 
     @Test
     void mustBeCritical(){
         assertTrue(new RiskScore(0.95).isCritical());
-        assertTrue(new RiskScore(0.94).isCritical());
+        assertTrue(new RiskScore(0.91).isCritical());  // justo por encima del umbral
+        assertTrue(new RiskScore(1.0).isCritical());   // límite superior
     }
 
     @Test
@@ -32,8 +36,8 @@ public class RiskScoreTest {
     @Test
     @DisplayName("Rejects inconsistent level")
     void mustRejectInconsistentLevel(){
-        assertThrows(IllegalArgumentException.class, () -> new RiskScore(0.95, RiskLevel.LOW));
-        assertThrows(IllegalArgumentException.class, () -> new RiskScore(0.9, RiskLevel.CRITICAL));
+        assertThrows(InconsistentRiskLevelException.class, () -> new RiskScore(0.95, RiskLevel.LOW));
+        assertThrows(InconsistentRiskLevelException.class, () -> new RiskScore(0.9, RiskLevel.CRITICAL));
     }
 
     @Test
@@ -50,5 +54,12 @@ public class RiskScoreTest {
         assertEquals(RiskLevel.MEDIUM, new RiskScore(0.5).level());
         assertEquals(RiskLevel.LOW, new RiskScore(0.4).level());
         assertEquals(RiskLevel.LOW, new RiskScore(0.05).level());
+    }
+
+    @Test
+    @DisplayName("accepts boundary values 0.0 and 1.0")
+    void mustAcceptBoundaries() {
+        assertDoesNotThrow(() -> new RiskScore(0.0));
+        assertDoesNotThrow(() -> new RiskScore(1.0));
     }
 }

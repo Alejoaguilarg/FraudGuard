@@ -1,11 +1,14 @@
 package co.com.fraudguard.model.transaction;
 
+import co.com.fraudguard.model.shared.exception.InvalidTransactionIdException;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class TransactionIdTest {
 
@@ -24,5 +27,11 @@ public class TransactionIdTest {
         assertNotNull(generated2);
         assertNotNull(generated1);
         assertNotEquals(generated1, generated2);
+    }
+
+    @Test
+    @DisplayName("rejects null value")
+    void mustRejectNullValue() {
+        assertThrows(InvalidTransactionIdException.class, () -> new TransactionId(null));
     }
 }

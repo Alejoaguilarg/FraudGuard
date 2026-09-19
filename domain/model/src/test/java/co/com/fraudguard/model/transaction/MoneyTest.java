@@ -1,5 +1,8 @@
 package co.com.fraudguard.model.transaction;
 
+import co.com.fraudguard.model.shared.exception.CurrencyMismatchException;
+import co.com.fraudguard.model.shared.exception.InvalidAmountException;
+import co.com.fraudguard.model.shared.exception.InvalidCurrencyException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -19,7 +22,7 @@ class MoneyTest {
         @Test
         @DisplayName("rejects negative amount")
         void mustBePositive() {
-            assertThrows(IllegalArgumentException.class, () -> Money.of("-1", "USD"));
+            assertThrows(InvalidAmountException.class, () -> Money.of("-1", "USD"));
         }
 
         @Test
@@ -38,18 +41,18 @@ class MoneyTest {
         @Test
         @DisplayName("rejects null currency")
         void mustHaveCurrency() {
-            assertThrows(IllegalArgumentException.class, () -> Money.of("1", null));
+            assertThrows(InvalidCurrencyException.class, () -> Money.of("1", null));
         }
 
         @Test
         @DisplayName("rejects empty currency")
         void mustHaveCurrencyNotEmpty() {
-            assertThrows(IllegalArgumentException.class, () -> Money.of("1", ""));
+            assertThrows(InvalidCurrencyException.class, () -> Money.of("1", ""));
         }
 
         @Test
         void mustRejectInvalidCurrency() {
-            assertThrows(IllegalArgumentException.class, () -> Money.of("1", "invalid"));
+            assertThrows(InvalidCurrencyException.class, () -> Money.of("1", "invalid"));
         }
     }
 
@@ -68,7 +71,7 @@ class MoneyTest {
         @Test
         @DisplayName("rejects different currencies")
         void mustRejectDifferentCurrency() {
-            assertThrows(IllegalArgumentException.class,
+            assertThrows(CurrencyMismatchException.class,
                     () -> Money.of("1", "USD").add(Money.of("1", "EUR")));
         }
 
@@ -103,7 +106,25 @@ class MoneyTest {
     @Test
     @DisplayName("rejects currencies without default fractions digits")
     void mustRejectCurrenciesWithoutDefaultFractionDigits(){
-        assertThrows(IllegalArgumentException.class, () -> Money.of("1", "XXX"));
-        assertThrows(IllegalArgumentException.class, () -> Money.of("100", "XUA"));
+        assertThrows(InvalidCurrencyException.class, () -> Money.of("1", "XXX"));
+        assertThrows(InvalidCurrencyException.class, () -> Money.of("100", "XUA"));
+    }
+
+    @Test
+    @DisplayName("throws InvalidCurrencyException for unknown currency code")
+    void rejectsUnknownCurrency() {
+        assertThrows(InvalidCurrencyException.class, () -> Money.of("100", "XYZ"));
+    }
+
+    @Test
+    @DisplayName("throws InvalidAmountException for non-numeric amount")
+    void rejectsNonNumericAmount() {
+        assertThrows(InvalidAmountException.class, () -> Money.of("abc", "USD"));
+    }
+
+    @Test
+    @DisplayName("rejects blank currency")
+    void mustRejectBlankCurrency() {
+        assertThrows(InvalidCurrencyException.class, () -> Money.of("1", "   "));
     }
 }

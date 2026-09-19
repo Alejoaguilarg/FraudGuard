@@ -1,12 +1,13 @@
 package co.com.fraudguard.model.transaction.event;
 
+import co.com.fraudguard.model.shared.exception.InvalidDomainEventException;
 import  co.com.fraudguard.model.transaction.Money;
 import co.com.fraudguard.model.transaction.TransactionId;
 
 import java.time.Instant;
 
 // TransactionCreated: Evento inmutable emitido al crear una Transaction.
-// Valida: TransactionId, Amount, Country, CreatedAt no null, country no vacío.
+// Valida: TransactionId, Amount, Country, CreatedAt no null, country no vacío -> InvalidDomainEventException
 // Expone: occurredAt() -> retorna createdAt (contrato de DomainEvent)
 public record TransactionCreated(TransactionId transactionId,
                                  Money amount,
@@ -14,16 +15,16 @@ public record TransactionCreated(TransactionId transactionId,
                                  Instant createdAt) implements DomainEvent {
     public TransactionCreated {
         if (transactionId == null) {
-            throw new IllegalArgumentException("transactionId must not be null");
+            throw new InvalidDomainEventException("transactionId must not be null");
         }
         if (amount == null) {
-            throw new IllegalArgumentException("amount must not be null");
+            throw new InvalidDomainEventException("amount must not be null");
         }
         if (country == null || country.isBlank()) {
-            throw new IllegalArgumentException("country must not be null or blank");
+            throw new InvalidDomainEventException("country must not be null or blank");
         }
         if (createdAt == null) {
-            throw new IllegalArgumentException("createdAt must not be null");
+            throw new InvalidDomainEventException("createdAt must not be null");
         }
     }
 

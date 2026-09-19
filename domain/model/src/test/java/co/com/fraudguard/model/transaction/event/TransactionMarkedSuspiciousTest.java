@@ -1,5 +1,6 @@
 package co.com.fraudguard.model.transaction.event;
 
+import co.com.fraudguard.model.shared.exception.InvalidDomainEventException;
 import co.com.fraudguard.model.transaction.TransactionId;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -14,21 +15,21 @@ public class TransactionMarkedSuspiciousTest {
     @Test
     @DisplayName("Must throw exception when transactionId is null")
     void mustThrowExceptionWhenTransactionIdIsNull() {
-        assertThrows(IllegalArgumentException.class,
+        assertThrows(InvalidDomainEventException.class,
                 () -> new TransactionMarkedSuspicious(null, "reason", Instant.now()));
     }
 
     @Test
     @DisplayName("Must throw exception when reason is null")
     void mustThrowExceptionWhenReasonIsNull() {
-        assertThrows(IllegalArgumentException.class,
+        assertThrows(InvalidDomainEventException.class,
                 () -> new TransactionMarkedSuspicious(TransactionId.generate(), null, Instant.now()));
     }
 
     @Test
     @DisplayName("Must throw exception when evaluatedAt is null")
     void mustThrowExceptionWhenTimestampIsNull() {
-        assertThrows(IllegalArgumentException.class,
+        assertThrows(InvalidDomainEventException.class,
                 () -> new TransactionMarkedSuspicious(TransactionId.generate(), "reason", null));
     }
 
